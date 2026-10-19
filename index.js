@@ -1,7 +1,7 @@
 import {team, teammateName} from './data/team.js';
 import {stormShots} from './data/shot.js';
 import {aboutPYSC} from './data/aboutPYSC.js';
-
+console.log(team)
 const region = ["luzon", "visayas", "mindanao"];
 const regionalTeammateBox = document.querySelector("#teammate-group");
 const otherTeammateBox = document.querySelector("#other-teammate-group");
