@@ -154,7 +154,7 @@ function renderShot(byName) {
                 year: "numeric",
               })}
         </div>
-        <img src="${fi${p.name}.jpg" class="rounded-lg col-span-2 h-[300px] w-full"/>
+        <img src="${fp${p.name}.jpg" class="rounded-lg col-span-2 h-[300px] w-full"/>
         <h3 id="storm-photo-title" class="font-bold text-3xl text-red-400">${p.name}</h3>
         <p id="storm-location-text" class="flex gap-3 items-center text-xl text-white/60 self-start"><i class="fa fa-map-marker"></i>${p.location}</p>
         <p id="storm-direction-text" class="flex gap-3 items-center text-xl text-red-400 bg-red-400/20 p-2 px-3 rounded-full justify-self-start self-center"><i class="fa fa-compass"></i>${p.direction}</p>
