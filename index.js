@@ -97,7 +97,7 @@ const filterBtns = document.querySelectorAll("#filter-btn");
 filterBtns.forEach((btn) => {
   btn.className += btn.dataset.tag === "All" ? "bg-red-400" : "bg-transparent";
 });
-const photoPath = "./image/storm-photo";
+const photoPath = "./image/storm-photo/";
 
 function foundChaser() {
   let found = [];
