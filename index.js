@@ -209,3 +209,5 @@ function renderAboutItem() {
 renderAboutItem();
 
 const copyRightYear = document.querySelector("#copyright-year").textContent = new Date().getFullYear();
+
+console.log("Success it work in GitHub")
