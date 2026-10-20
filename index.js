@@ -140,7 +140,7 @@ function renderShot(byName) {
           s.photos
             .map(
               (p) => `
-      <div class="p-3 grid gap-5 rounded-lg border border-slate-400 grid-cols-[1fr_auto] duration-500 hover:scale-110">
+      <div class="p-3 grid gap-5 rounded-lg border border-slate-400 grid-cols-[1fr_auto] duration-500">
         <div id="storm-card-header" class="flex justify-between items-center col-span-2">
           <div id="author-icon" class="flex gap-5 items-center">
             <img src="./image/dp.jpg" class="size-[60px] rounded-full"/>
