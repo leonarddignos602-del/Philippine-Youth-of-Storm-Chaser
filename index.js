@@ -43,30 +43,46 @@ function renderOtherMemberPreview() {
       .join("")}
     <div id="other-badge-circle" class="size-[80px] grid place-content-center bg-white/5 text-2xl  text-red-400 rounded-full">${otherTotal - length}+</div>
     </div>
-    <button class="p-3 px-4 rounded-lg bg-red-400 text-xl flex gap-2 items-center">View All<i class="fa fa-angle-right"></i></button>
+    <button id="view-other-chaser-btn" class="p-3 px-4 rounded-lg bg-red-400 text-xl flex gap-2 items-center pointer-events-auto justify-self-center">View All<i class="fa fa-angle-right"></i></button>
   `;
+  const otherChaserToggle = otherTeammateBox.querySelector("#view-other-chaser-btn")
+  otherChaserToggle.onclick = () => {
+    renderOtherMember(otherChaserToggle);
+  }
 }
 
-function renderOtherMember() {
+function renderOtherMember(toggle) {
   const { other_member } = team;
-  otherTeammateBox.innerHTML = other_member
-    .map(
-      (t, i) => `
-  <h2 id="regional-label" class="capitalize text-3xl text-white/60 font-light">${region[i]}</h2>
-  <div id="regional-group" class="flex flex-wrap gap-3 *:basis-[500px]">
-  ${t[region[i]]
-          .map(
-            (member) => `
-    <div id="other-member" class="grid gap-3 items-start p-3 rounded-lg border border-slate-400 justify-items-center duration-500">
-       <img src="./image/dp.jpg" class="size-[200px] rounded-[100%]"/>
-       <h3 id="member-name" class="text-3xl text-red-400 font-bold text-center">${member.name}</h3>
-       <p id="member-region" class="flex gap-2 items-center text-white/60 text-xl"><i class="fa fa-map-marker"></i>${member.area}</p>
+  otherTeammateBox.innerHTML += `
+  <div id="other-chaser-card" class="fixed top-[50%] left-[50%] translate-x-[-50%] grid gap-4 translate-y-[-50%] backdrop-blur-xl rounded-lg p-3 h-[60vh] w-[90vw] bg-black/80 border border-slate-400">
+    <div id="card-header" class="flex items-center">
+      <button id="hide-other-chaser-card" class="p-3"><i class="fa fa-angle-left"></i></button>
+      <h2 id="section-label" class="grow text-center text-2xl">Other Chasers</h2>
     </div>
-  `,
-          )
-          .join("")}</div>`,
-    )
-    .join("");
+    <div id="card-content-wrapper" class="overflow-scroll h-full grid gap-4">
+    ${other_member.map((m, i) => `
+    <h3 id="regional-text" class="text-lg text-red-400 bg-red-400/20 p-2 px-3 rounded-full capitalize justify-self-start flex items-center gap-2">${region[i]}<span id="circle" class="size-[8px] rounded-full bg-red-400"></span><span id="total-chaser">${m[region[i]].length} Chasers</span></h3>
+    <div id="chaser-wrapper" class="flex flex-wrap gap-4">
+    ${m[region[i]].map(c => `
+      <div id="other-chaser-item" class="basis-full 2xl:basis-[300px] p-3 bg-red-400/5 rounded-lg flex items-center gap-4">
+        <img src="./image/${c.image ? "avatars/"+c.image : "dp.jpg"}" class="size-[100px] rounded-full"/>
+        <div id="chader-name-card">
+          <h4 id="chaser-name" class="text-red-400 text-xl font-bold">${c.name}</h4>
+          <p id="chaser-region" class="text-white/60 flex gap-3 items-center"><i class="fa fa-map-marker"></i>${c.area}</p>
+        </div>
+      </div>
+    `).join("")}</div>`).join("")}
+    </div>
+  </div>
+  `
+  toggle.className = toggle.className.replace("pointer-events-auto", "pointer-events-none")
+  const otherCardModal = document.querySelector("#other-chaser-card")
+  document.querySelector("#hide-other-chaser-card").onclick = () => hideChaserCard(otherCardModal)
+}
+
+function hideChaserCard(card) {
+  card.remove();
+  renderOtherMemberPreview();
 }
 
 renderRegionalLeader();
@@ -125,14 +141,14 @@ function foundChaser() {
   return found;
 }
 
-const allShot = foundChaser();
+const existChaser = foundChaser();
 const shotGroup = document.querySelector("#storm-shot-group");
-
+let isReact = false;
 function renderShot(byName) {
   const filteredShot =
     byName === "all"
-      ? allShot
-      : allShot.filter((s) => s.name.toLowerCase() === byName);
+      ? existChaser
+      : existChaser.filter((s) => s.name.toLowerCase() === byName);
   shotGroup.innerHTML = `
     ${filteredShot.length
       ? filteredShot
@@ -158,7 +174,7 @@ function renderShot(byName) {
         <h3 id="storm-photo-title" class="font-bold text-3xl text-red-400">${p.name}</h3>
         <p id="storm-location-text" class="flex gap-3 items-center text-xl text-white/60 self-start"><i class="fa fa-map-marker"></i>${p.location}</p>
         <p id="storm-direction-text" class="flex gap-3 items-center text-xl text-red-400 bg-red-400/20 p-2 px-3 rounded-full justify-self-start self-center"><i class="fa fa-compass"></i>${p.direction}</p>
-        <button id="like-btn" class="text-xl p-3 px-4 rounded-full border border-red-400 flex gap-3 items-center text-red-400/40 justify-self-end"><i class="fa fa-heart"></i><span id="like-count">0</span></button>
+        <button id="like-btn" class="text-xl p-3 px-4 rounded-full border border-red-400 flex gap-3 items-center text-red-400/40 justify-self-end active:scale-110 duration-300" data-name="${p.name}"><i class="fa fa-heart"></i><span id="like-count">${p.likes}</span></button>
       </div>
     `,
             )
@@ -168,6 +184,32 @@ function renderShot(byName) {
       : `<p class="my-5 text-2xl justify-self-center grow text-center">No item found for <span class="capitalize">${byName}</span></p>`
     }
   `;
+  const reactBtn = document.querySelectorAll("#like-btn");
+  reactBtn.forEach(react => react.onclick = () => interactiveReact(
+    react.querySelector("#like-count"),
+    react.dataset.name,
+    isReact
+  ))
+}
+
+function findLikeInList(name, isReact) {
+  let foundLike = null;
+  for (let chaser of existChaser) {
+    for (let photo of chaser.photos) {
+      if (photo.name === name && isReact) {
+        photo.likes++
+        foundLike = photo.likes;
+      }
+    }
+  }
+  return foundLike;
+}
+
+function interactiveReact(btn, name, isReact) {
+  isReact = !isReact ? true : false
+  console.log(isReact)
+  let like = findLikeInList(name, isReact);
+  btn.textContent = like;
 }
 
 renderShot("all");
@@ -211,3 +253,4 @@ renderAboutItem();
 const copyRightYear = document.querySelector("#copyright-year").textContent = new Date().getFullYear();
 
 console.log("Success it work in GitHub")
+console.log(window.innerWidth)
