@@ -33,8 +33,12 @@
         @apply border-red-400;
       }
 
-      nav a:hover {
+      nav button:hover {
         @apply text-red-400 bg-red-400/20;
+      }
+
+      #panel {
+        animation: fade-out 500ms forwards;
       }
 
       #upper-label {
@@ -108,9 +112,9 @@
       <i class="fa fa-bars"></i>
     </button>
     <nav class="grid 2xl:flex gap-2 overflow-hidden *:p-3 *:text-xl *:flex *:gap-2 *:items-center *:duration-400 *:rounded-lg duration-400 max-h-0 h-auto col-span-2">
-      <a href=""><i class="fa fa-user"></i>Chasers</a>
-      <a href=""><i class="fa fa-bolt"></i>Weather Hub</a>
-      <a href=""><i class="fa fa-user-group"></i>Community</a>
+      <button href=""><i class="fa fa-user"></i>Chasers</button>
+      <button id="weather-hub-btn" href=""><i class="fa fa-bolt"></i>Weather Hub</button>
+      <button href=""><i class="fa fa-user-group"></i>Community</button>
     </nav>
   </header>
   <main class="grid gap-15 mt-20">
@@ -171,9 +175,12 @@
         <p id="filter-label" class="self-center flex gap-2 items-center text-white/60 mr-2"><i class="fa fa-camera"></i>Chaser</p>
         <button data-tag="All" id="filter-btn">All</button>
         <button data-tag="Alistair" id="filter-btn">Alistair</button>
+        <button data-tag="Claine" id="filter-btn">Claine</button>
+        <button data-tag="Gemrick" id="filter-btn">Gemrick</button>
         <button data-tag="Leonard" id="filter-btn">Leonard</button>
         <button data-tag="LJ" id="filter-btn">LJ</button>
         <button data-tag="Liveby" id="filter-btn">Liveby</button>
+        <button data-tag="Marco" id="filter-btn">Marco</button>
       </div>
       <div id="storm-shot-group" class="flex flex-wrap gap-4 *:basis-[500px]"></div>
     </section>
@@ -185,8 +192,8 @@
       <div id="about-item-group" class="flex flex-wrap *:basis-[500px] md:*:basis-[300px] gap-6"></div>
     </section>
   </main>
-  <footer class="p-4 py-12 grid gap-4">
-    <p id="copyright" class="text-center text-xl text-white/60">@The Philippine Youth of Storm Chasers <span id="copyright-year"></span></p>
+  <footer class="p-4 bg-red-400/10 mt-10 py-12 grid gap-4">
+    <p id="copyright" class="text-center text-xl text-red-400/80">@The Philippine Youth of Storm Chasers <span id="copyright-year"></span></p>
     <p id="web-dev" class="text-xl text-white/40 flex gap-3 items-center"><i class="fa fa-code"></i>Dev: Leonard Dignos - PYSC Member</p>
   </footer>
 
