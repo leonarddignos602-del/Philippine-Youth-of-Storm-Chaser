@@ -106,10 +106,6 @@
           area: "Zamboanga Peninsula"
         },
         {
-          name: "JM Sar",
-          area: "Zamboanga Peninsula"
-        },
-        {
           name: "Jolex Langit",
           area: "Caraga",
           image: "jolex.webp"
