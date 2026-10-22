@@ -2,6 +2,16 @@ import { team, teammateName } from "./data/team.js";
 import { stormShots } from "./data/storm-photo.js";
 import { aboutPYSC } from "./data/aboutPYSC.js";
 
+const nav = document.querySelector("header nav");
+const navToggle = document.querySelector("#menu-btn");
+
+navToggle.onclick = () => expandNav()
+
+function expandNav() {
+  nav.classList.toggle("max-h-[200px]");
+  navToggle.className = !navToggle.className.includes("border-red-400") ? navToggle.className.replace("border-slate-400", "border-red-400") : navToggle.className.replace("border-red-400", "border-slate-400")
+}
+
 const region = [ "luzon", "visayas", "mindanao" ];
 const regionalTeammateBox = document.querySelector("#teammate-group");
 const otherTeammateBox = document.querySelector("#other-teammate-group");
@@ -12,7 +22,7 @@ function renderRegionalLeader() {
       (lead) => `
     <div id="regional-lead-card" class="grid gap-2 justify-items-center content-start rounded-lg border border-slate-400 p-3 duration-500 hover:border-slate-200">
       <p id"regional-name" class="uppercase  mb-2 text-3xl text-red-400 bg-red-400/20 p-2 px-3 rounded-full">${lead.region}</p>
-       <img src="./image/dp.jpg" class="size-[200px]"/>
+       <img src="./image/avatars/${lead.image}" class="size-[200px] rounded-full"/>
        <h3 id="regional-lead-name" class="text-red-400 text-2xl text-center font-bold">${lead.name}</h3>
        <p id="regional-lead-area" class="text-white/60 flex gap-2 items-center"><i class="fa fa-map-marker"></i>${lead.area}</p>
        ${lead.occupation ? `<p id="regional-lead-occupation" class="flex gap-2 items-center"><i class="fa fa-briefcase"></i>${lead.occupation}</p>` : ""}
@@ -25,8 +35,8 @@ function renderRegionalLeader() {
 const landingUI = document.querySelector("main").innerHTML;
 function renderOtherMemberPreview() {
   const length = 3;
-  const previewBadge = team.other_member.filter(
-    (o) => team.other_member.length <= length,
+  const previewBadge = team.other_member[0].luzon.filter(
+    (o,i) => i < length
   );
   let otherTotal = 0;
   team.other_member.forEach((r, i) => {
@@ -37,7 +47,7 @@ function renderOtherMemberPreview() {
     ${previewBadge
       .map(
         (p) => `
-      <img src="./image/dp.jpg" class="size-[80px]"/>
+      <img src="./image/${p.image ? `avatars/${p.image}` : "dp.jpg"}" class="size-[80px] rounded-full"/>
     `,
       )
       .join("")}
@@ -143,7 +153,6 @@ function foundChaser() {
 
 const existChaser = foundChaser();
 const shotGroup = document.querySelector("#storm-shot-group");
-let isReact = false;
 function renderShot(byName) {
   const filteredShot =
     byName === "all"
@@ -159,7 +168,7 @@ function renderShot(byName) {
       <div id="storm-photo-card" class="p-3 grid gap-5 rounded-lg border border-slate-400 grid-cols-[1fr_auto] duration-500">
         <div id="storm-card-header" class="flex justify-between items-center col-span-2">
           <div id="author-icon" class="flex gap-5 items-center">
-            <img src="./image/dp.jpg" class="size-[60px] rounded-full"/>
+            <img src="./image/avatars/${s.image}" class="size-[60px] rounded-full"/>
             <p id="author-name" class="text-xl text-white/60">${s.name}</p>
           </div>
           <p id="storm-photo-date" class="text-xl">${new Date(
@@ -174,7 +183,7 @@ function renderShot(byName) {
         <h3 id="storm-photo-title" class="font-bold text-3xl text-red-400">${p.name}</h3>
         <p id="storm-location-text" class="flex gap-3 items-center text-xl text-white/60 self-start"><i class="fa fa-map-marker"></i>${p.location}</p>
         <p id="storm-direction-text" class="flex gap-3 items-center text-xl text-red-400 bg-red-400/20 p-2 px-3 rounded-full justify-self-start self-center"><i class="fa fa-compass"></i>${p.direction}</p>
-        <button id="like-btn" class="text-xl p-3 px-4 rounded-full border border-red-400 flex gap-3 items-center text-red-400/40 justify-self-end active:scale-110 duration-300" data-name="${p.name}"><i class="fa fa-heart"></i><span id="like-count">${p.likes}</span></button>
+        <button id="like-btn" class="text-xl p-3 px-4 rounded-full border border-red-400 flex gap-3 items-center text-${p.likes > 0 ? "red-400" : "red-400/40"} justify-self-end active:scale-110 duration-300" data-name="${p.name}"><i class="fa fa-heart"></i><span id="like-count">${p.likes}</span></button>
       </div>
     `,
             )
@@ -185,19 +194,19 @@ function renderShot(byName) {
     }
   `;
   const reactBtn = document.querySelectorAll("#like-btn");
-  reactBtn.forEach(react => react.onclick = () => interactiveReact(
+  reactBtn.forEach(react => {
+    react.onclick = () => interactiveReact(
     react.querySelector("#like-count"),
     react.dataset.name,
-    isReact
-  ))
+  )})
 }
 
-function findLikeInList(name, isReact) {
+function findLikeInList(name, btn) {
   let foundLike = null;
   for (let chaser of existChaser) {
     for (let photo of chaser.photos) {
-      if (photo.name === name && isReact) {
-        photo.likes++
+      if (photo.name === name) {
+        photo.likes < 1 ? photo.likes++ : photo.likes--
         foundLike = photo.likes;
       }
     }
@@ -205,11 +214,11 @@ function findLikeInList(name, isReact) {
   return foundLike;
 }
 
-function interactiveReact(btn, name, isReact) {
-  isReact = !isReact ? true : false
-  console.log(isReact)
-  let like = findLikeInList(name, isReact);
+function interactiveReact(btn, name) {
+  let like = findLikeInList(name, btn);
   btn.textContent = like;
+  btn.classList.toggle("reacted");
+  like > 0 ? btn.parentNode.classList.replace("text-red-400/40", "text-red-400") : btn.parentNode.classList.replace("text-red-400", "text-red-400/40")
 }
 
 renderShot("all");
