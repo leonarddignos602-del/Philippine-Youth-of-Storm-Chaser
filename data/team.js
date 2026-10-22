@@ -5,13 +5,15 @@
       region: "Luzon",
       occupation: "Weather Specialist & Storm Chaser at DOST PAGASA",
       area: "NCR",
+      image: "marco.webp"
     },
     {
       name: "Charles Xavier Galdones",
       region: "Visayas",
       area: "Central Visayas",
+      image: "charles.webp"
     },
-    { name: "LJ Deluvio", region: "Mindanao", area: "Caraga" },
+    { name: "LJ Deluvio", region: "Mindanao", area: "Caraga", image: "lj.webp" },
   ],
   other_member: [
     {
@@ -22,7 +24,8 @@
         },
         { 
           name: "Claine John Dizon", 
-          area: "Cagayan Valley"
+          area: "Cagayan Valley",
+          image: "claine.webp"
         },
         { 
           name: "David Jhun Carpiso",
@@ -35,10 +38,12 @@
         {
           name: "Keon Consigna",
           area: "NCR",
+          image: "keon.webp"
         },
         {
           name: "Leonard Dignos",
-          area: "Calabarzon"
+          area: "Calabarzon",
+          image: "leonard.webp"
         }
       ],
     },
@@ -46,11 +51,13 @@
       visayas: [
         {
           name: "Dibbon Luis Carin",
-          area: "Central Visayas"
+          area: "Central Visayas",
+          image: "dibbon.webp"
         },
         {
           name: "Gavin Zeus Pepito",
-          area: "Central Visayas"
+          area: "Central Visayas",
+          image: "gavin.webp"
         },
         {
           name: "Jim Emmanuel Formentera",
@@ -62,7 +69,7 @@
         },
         {
           name: "Kent Lloyd Heredia",
-          area: "Central Visayas"
+          area: "Central Visayas",
         }
       ],
     },
@@ -82,7 +89,8 @@
         },
         {
           name: "Gemrick Saraniogon",
-          area: "Zamboanga Peninsula"
+          area: "Zamboanga Peninsula",
+          image: "gemrick.webp"
         },
         {
           name: "Jacob Adlao",
@@ -90,7 +98,8 @@
         },
         {
           name: "Jansen Langit",
-          area: "Caraga"
+          area: "Caraga",
+          image: "jansen.webp"
         },
         {
           name: "Jireh Adlao",
@@ -102,7 +111,8 @@
         },
         {
           name: "Jolex Langit",
-          area: "Caraga"
+          area: "Caraga",
+          image: "jolex.webp"
         },
         {
           name: "Kreza Mercader",
@@ -122,15 +132,18 @@
         },
         {
           name: "Ryden Soriso",
-          area: "Caraga"
+          area: "Caraga",
+          image: "ryden.webp"
         },
         {
           name: "Vince Caga",
-          area: "Caraga"
+          area: "Caraga",
+          image: "vince.webp"
         },
         {
           name: "Zaq Villanueva",
-          area: "Caraga"
+          area: "Caraga",
+          image: "zaq.webp"
         },
       ],
     },
