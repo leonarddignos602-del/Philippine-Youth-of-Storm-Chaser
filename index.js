@@ -1,6 +1,7 @@
 import { team, teammateName } from "./data/team.js";
 import { stormShots } from "./data/storm-photo.js";
 import { aboutPYSC } from "./data/aboutPYSC.js";
+import { alertList } from "./data/alert.js";
 
 const nav = document.querySelector("header nav");
 const navToggle = document.querySelector("#menu-btn");
@@ -179,7 +180,7 @@ function renderShot(byName) {
                 year: "numeric",
               })}
         </div>
-        <img src="${photoPath}${p.name}.webp" class="rounded-lg col-span-2 h-[300px] w-full"/>
+        <img src="${photoPath}${s.src}${p.name}.webp" class="rounded-lg col-span-2 h-[300px] w-full"/>
         <h3 id="storm-photo-title" class="font-bold text-3xl text-red-400">${p.name}</h3>
         <p id="storm-location-text" class="flex gap-3 items-center text-xl text-white/60 self-start"><i class="fa fa-map-marker"></i>${p.location}</p>
         <p id="storm-direction-text" class="flex gap-3 items-center text-xl text-red-400 bg-red-400/20 p-2 px-3 rounded-full justify-self-start self-center"><i class="fa fa-compass"></i>${p.direction}</p>
@@ -261,5 +262,95 @@ renderAboutItem();
 
 const copyRightYear = document.querySelector("#copyright-year").textContent = new Date().getFullYear();
 
-console.log("Success it work in GitHub")
-console.log(window.innerWidth)
+const weatherHubBtn = document.querySelector("#weather-hub-btn");
+weatherHubBtn.onclick = () => weatherHub();
+function weatherHub() {
+  const menus = [
+    {
+      name: "Alerts",
+      content: alertList.alerts,
+      headline: alertList.alerts.map(m => m.name),
+    },
+    {
+      name: "Full Documents",
+      content: [],
+    }
+  ]
+  weatherHubBtn.style.pointerEvents = "none"
+  const panel = document.createElement("div");
+  panel.id = "panel-wrapper";
+  panel.className = "fixed top-0 left-0 z-10 grid place-content-center h-screen w-screen";
+  panel.innerHTML = `
+    <div id="panel" class="p-3 rounded-lg w-[95vw] border opacity-0 translate-x-2 border-slate-400 bg-black/80 backdrop-blur-md grid gap-3">
+      <div id="panel-header" class="flex gap-3 items-center">
+        <button id="hide-panel-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
+        <h2 id="panel-title" class="text-center text-3xl font-bold grow">Weather <span class="text-red-400">Hub</span></h2>
+      </div>
+      <div id="menu-card-layout" class="flex flex-wrap gap-4">
+        ${menus.map(m => `
+          <div id="${m.name.toLowerCase()}-item" class="p-3 rounded-lg bg-red-400/5 grid items-start gap-4 basis-[500px] border border-red-400/60">
+            <h3 id="menu-name" class="flex items-center gap-3 text-red-400 font-bold">${m.name}<span id="circle" class="size-[10px] rounded-full bg-red-400"></span><span id="count">${m.content.length}</span></h3>
+            ${
+              m.headline ? m.headline.map(m =>`
+              <article class="grid grid-cols-[1fr_auto] gap-2 items-center">
+                <h3 id="article-title" class="flex items-center gap-2"><span id="icon-title" class="text-red-400"><i class="fa fa-bolt"></i></span>${m}</h3>
+                <button id="view-article" class="p-2 px-3 rounded-lg text-white bg-red-400 active:scale-110 duration-200" data-title="${m}">Read Article</button>
+              </article>
+              `).join("") : ""
+            }
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `
+  document.body.append(panel);
+  changeContent();
+  hidePanel(panel);
+}
+
+function hidePanel(panel) {
+  panel.querySelector("#hide-panel-btn").onclick = () => exitPanel(panel);
+}
+
+function changeContent() {
+  const panel = document.querySelector("#panel");
+  const panelContent = panel.innerHTML;
+  panel.querySelectorAll("#alerts-item button").forEach(btn => {
+    btn.onclick = () => {
+      const foundArticle = alertList.alerts.find(a => a.name === btn.dataset.title);
+      readArticle(
+        panel,
+        foundArticle,
+        panelContent
+      )
+    }
+  })
+}
+
+function readArticle(panel, article, panelContent) {
+  const { name, date, content, source } = article;
+  panel.innerHTML = `
+  <div id="panel-header" class="flex items-center gap-3">
+    <button id="exit-article-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
+    <h2 id="panel-title" class="text-2xl font-bold text-center">Read Article</h2>
+  </div>
+  <div id="article-header" class="flex justify-between items-center">
+    <h3 id="article-title" class="font-bold text-red-400 text-xl">${name}</h3>
+  </div>
+  <p id="article-content" class="text-lg text-white/60">${content ? content : "No content added"}</p>
+  ${source ? `<p class="text-lg text-white/60">Source: <span class="text-red-400/80">${source}</span></p>` : ""}
+  `
+  panel.querySelector("#exit-article-btn").onclick = () => exitToArticle(panel, panelContent);
+}
+
+function exitToArticle(panel, panelContent) {
+  panel.innerHTML = panelContent;
+  changeContent();
+  hidePanel(panel.parentNode);
+}
+
+function exitPanel(panel) {
+  document.body.removeChild(panel);
+  weatherHubBtn.style.pointerEvents = "auto";
+  weatherHubBtn.onclick = () => weatherHub();
+}
