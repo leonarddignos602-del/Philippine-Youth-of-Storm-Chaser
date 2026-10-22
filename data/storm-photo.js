@@ -4,6 +4,7 @@ export const stormShots = {
       { // name of chasers
         name: "Leonard",
         image: "leonard.webp",
+        src: "/leonard/",
         photos: [
           {
             name: "Sunset Shelf Cloud",
