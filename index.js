@@ -309,7 +309,7 @@ function weatherHub() {
 }
 
 function hidePanel(panel) {
-  panel.querySelector("#hide-panel-btn").onclick = () => exitPanel(panel);
+  panel.querySelector("#hide-panel-btn").onclick = () => closePanel(panel);
 }
 
 function changeContent() {
@@ -329,13 +329,19 @@ function changeContent() {
 
 function readArticle(panel, article, panelContent) {
   const { name, date, content, source } = article;
+  const dateFormat = new Date(date).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  })
   panel.innerHTML = `
   <div id="panel-header" class="flex items-center gap-3">
     <button id="exit-article-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
     <h2 id="panel-title" class="text-2xl font-bold text-center">Read Article</h2>
   </div>
-  <div id="article-header" class="flex justify-between items-center">
-    <h3 id="article-title" class="font-bold text-red-400 text-xl">${name}</h3>
+  <div id="article-header" class="grid gap-3">
+    <h3 id="article-title" class="font-bold text-red-400 text-2xl">${name}</h3>
+    <p id="article-date" class="flex gap-3 items-center"><i class="fa fa-calendar"></i>${dateFormat}</p>
   </div>
   <p id="article-content" class="text-lg text-white/60">${content ? content : "No content added"}</p>
   ${source ? `<p class="text-lg text-white/60">Source: <span class="text-red-400/80">${source}</span></p>` : ""}
@@ -349,7 +355,7 @@ function exitToArticle(panel, panelContent) {
   hidePanel(panel.parentNode);
 }
 
-function exitPanel(panel) {
+function closePanel(panel) {
   document.body.removeChild(panel);
   weatherHubBtn.style.pointerEvents = "auto";
   weatherHubBtn.onclick = () => weatherHub();
