@@ -90,7 +90,8 @@
         {
           name: "Gemrick Saraniogon",
           area: "Zamboanga Peninsula",
-          image: "gemrick.webp"
+          image: "gemrick.webp",
+          status: "Temporary Leave"
         },
         {
           name: "Jacob Adlao",
