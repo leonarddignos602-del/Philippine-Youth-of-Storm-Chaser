@@ -18,7 +18,7 @@ export const alertList = {
           }, {
             name: "Wind Gusts", value: 185, unit: "kph"
           }, {
-            name: "Movement", value: "East-Northeast @ 15kph"
+            name: "Movement", value: "North Northwest @ 15kph"
           }
         ].map(i => `<p><span class="font-bold">${i.name}:</span> <span class="text-red-400">${i.value}${i.unit ? i.unit : ""}</span></p>`).join("")
       }
