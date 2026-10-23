@@ -12,7 +12,7 @@ export const alertList = {
       ${
         [
           {
-            name: "Wind Speed", value: "165kph"
+            name: "Wind Speed", value: "155kph"
           }, {
             name: "Wind Gusts", value: "195kph",
           }, {
