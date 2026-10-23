@@ -79,6 +79,7 @@ function renderOtherMember(toggle) {
         <img src="./image/${c.image ? "avatars/"+c.image : "dp.jpg"}" class="size-[100px] rounded-full"/>
         <div id="chader-name-card">
           <h4 id="chaser-name" class="text-red-400 text-xl font-bold">${c.name}</h4>
+          ${c.status ? `<p class="text-red-400 p-1 px-3 rounded-full bg-red-400/10">${c.status}</p>` : ""}
           <p id="chaser-region" class="text-white/60 flex gap-3 items-center"><i class="fa fa-map-marker"></i>${c.area}</p>
         </div>
       </div>
@@ -285,7 +286,7 @@ function weatherHub() {
   panel.id = "panel-wrapper";
   panel.className = "fixed top-0 left-0 z-10 grid place-content-center h-screen w-screen";
   panel.innerHTML = `
-    <div id="panel" class="p-3 rounded-lg w-[95vw] max-h-[50vh] h-auto border opacity-0 translate-x-2 border-slate-400 bg-black/80 backdrop-blur-md grid gap-3">
+    <div id="panel" class="p-3 rounded-lg w-[95vw] max-h-[80vh] h-auto border opacity-0 translate-x-2 border-slate-400 bg-black/80 backdrop-blur-md grid gap-3">
       <div id="panel-header" class="flex gap-3 items-center">
         <button id="hide-panel-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
         <h2 id="panel-title" class="text-center text-3xl font-bold grow">Weather <span class="text-red-400">Hub</span></h2>
