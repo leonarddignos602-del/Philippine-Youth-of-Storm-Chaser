@@ -272,7 +272,11 @@ function weatherHub() {
       headline: alertList.alerts.map(m => m.name),
     },
     {
-      name: "Full Documents",
+      name: "Severe Weather Warnings",
+      content: []
+    },
+    {
+      name: "Severe Weather Archieves",
       content: [],
     }
   ]
@@ -281,7 +285,7 @@ function weatherHub() {
   panel.id = "panel-wrapper";
   panel.className = "fixed top-0 left-0 z-10 grid place-content-center h-screen w-screen";
   panel.innerHTML = `
-    <div id="panel" class="p-3 rounded-lg w-[95vw] border opacity-0 translate-x-2 border-slate-400 bg-black/80 backdrop-blur-md grid gap-3">
+    <div id="panel" class="p-3 rounded-lg w-[95vw] max-h-[50vh] h-auto border opacity-0 translate-x-2 border-slate-400 bg-black/80 backdrop-blur-md grid gap-3">
       <div id="panel-header" class="flex gap-3 items-center">
         <button id="hide-panel-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
         <h2 id="panel-title" class="text-center text-3xl font-bold grow">Weather <span class="text-red-400">Hub</span></h2>
@@ -343,8 +347,8 @@ function readArticle(panel, article, panelContent) {
     <h3 id="article-title" class="font-bold text-red-400 text-2xl">${name}</h3>
     <p id="article-date" class="flex gap-3 items-center"><i class="fa fa-calendar"></i>${dateFormat}</p>
   </div>
-  <p id="article-content" class="text-lg text-white/60">${content ? content : "No content added"}</p>
-  ${source ? `<p class="text-lg text-white/60">Source: <span class="text-red-400/80">${source}</span></p>` : ""}
+  <article id="article-content" class="text-lg max-h-[30vh] h-auto overflow-scroll">${content ? content : "No content added"}</article>
+  ${source ? `<p class="text-lg mt-3 text-white/60">Source: <span class="text-red-400/80">${source}</span></p>` : ""}
   `
   panel.querySelector("#exit-article-btn").onclick = () => exitToArticle(panel, panelContent);
 }
