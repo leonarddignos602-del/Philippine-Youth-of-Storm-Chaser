@@ -3,7 +3,7 @@ export const alertList = {
     {
       name: "Tropical Cyclone Rosal Bulletin 11AM",
       content: `<p class="text-white/60">
-      Typhoon Rosal slightly weakens while moving over the Sea of East Taiwan
+      Typhoon Rosal slightly weakens while moving over the Sea of East of Taiwan
       </p>
 
       <div id="title-line" class="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
