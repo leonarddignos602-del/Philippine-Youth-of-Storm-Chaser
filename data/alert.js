@@ -20,7 +20,7 @@ export const alertList = {
           }, {
             name: "Movement", value: "North Northwest @ 15kph"
           }
-        ].map(i => `<p><span class="font-bold">${i.name}:</span> <span class="text-red-400">${i.value}${i.unit ? i.unit : ""}</span></p>`).join("")
+        ].map(i => `<p class="mt-2"><span class="font-bold">${i.name}:</span> <span class="text-red-400">${i.value}${i.unit ? i.unit : ""}</span></p>`).join("")
       }
       <br/>
       <div id="title-line" class="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
