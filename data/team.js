@@ -21,6 +21,7 @@
         {
           name: "Alistair Clark Sanglitan",
           area: "Calabarzon",
+          image: "alistair.webp"
         },
         { 
           name: "Claine John Dizon", 
