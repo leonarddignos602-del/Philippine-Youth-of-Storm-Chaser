@@ -436,7 +436,7 @@ function renderChaserAlbumBtn(albumPanel) {
 
 function viewChaserAlbum(name) {
   const albumPanel = document.querySelector("#album-panel");
-  const albumImagePath = `./image/albums/${name}/`;
+  const albumImagePath = `./image/albums/${name.toLowerCase()}/`;
   const foundAlbum = albums.chasers.find(c => c.name === name);
   albumPanel.innerHTML = `
     <div id="panel-header" class="flex items-center">
