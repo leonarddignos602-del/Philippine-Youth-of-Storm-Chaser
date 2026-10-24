@@ -2,7 +2,13 @@ import { team, teammateName } from "./data/team.js";
 import { stormShots } from "./data/storm-photo.js";
 import { aboutPYSC } from "./data/aboutPYSC.js";
 import { alertList } from "./data/alert.js";
+import { albums } from "./data/album.js";
 
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  })
 const nav = document.querySelector("header nav");
 const navToggle = document.querySelector("#menu-btn");
 
@@ -173,13 +179,7 @@ function renderShot(byName) {
             <img src="./image/avatars/${s.image}" class="size-[60px] rounded-full"/>
             <p id="author-name" class="text-xl text-white/60">${s.name}</p>
           </div>
-          <p id="storm-photo-date" class="text-xl">${new Date(
-                p.date,
-              ).toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
+          <p id="storm-photo-date" class="text-xl">${dateFormat.format(new Date(p.date))}</p>
         </div>
         <img src="${photoPath}${s.src}${p.name}.webp" class="rounded-lg col-span-2 h-[300px] w-full"/>
         <h3 id="storm-photo-title" class="font-bold text-3xl text-red-400">${p.name}</h3>
@@ -263,14 +263,18 @@ renderAboutItem();
 
 const copyRightYear = document.querySelector("#copyright-year").textContent = new Date().getFullYear();
 
+// Working for Navigation Menu -----
+
 const weatherHubBtn = document.querySelector("#weather-hub-btn");
 weatherHubBtn.onclick = () => weatherHub();
+
+// render WeatherHub navigation panel
+
 function weatherHub() {
   const menus = [
     {
       name: "Alerts",
       content: alertList.alerts,
-      headline: alertList.alerts.map(m => m.name),
     },
     {
       name: "Severe Weather Warnings",
@@ -294,14 +298,14 @@ function weatherHub() {
       <div id="menu-card-layout" class="flex flex-wrap gap-4">
         ${menus.map(m => `
           <div id="${m.name.toLowerCase()}-item" class="p-3 rounded-lg bg-red-400/5 grid items-start gap-4 basis-[500px] border border-red-400/60">
-            <h3 id="menu-name" class="flex items-center gap-3 text-red-400 font-bold">${m.name}<span id="circle" class="size-[10px] rounded-full bg-red-400"></span><span id="count">${m.content.length}</span></h3>
+            <h3 id="menu-name" class="flex items-center gap-3 text-red-400 font-bold">${m.name}<span id="circle" class="size-[10px] rounded-full bg-red-400"></span><span id="count">${m?.content[0]?.name ? m.content.length : 0}</span></h3>
             ${
               m.headline ? m.headline.map(m =>`
               <article class="grid grid-cols-[1fr_auto] gap-2 items-center">
                 <h3 id="article-title" class="flex items-center gap-2"><span id="icon-title" class="text-red-400"><i class="fa fa-bolt"></i></span>${m}</h3>
                 <button id="view-article" class="p-2 px-3 rounded-lg text-white bg-red-400 active:scale-110 duration-200" data-title="${m}">Read Article</button>
               </article>
-              `).join("") : ""
+              `).join("") : `<p class="text-white/60">No item added here</p>`
             }
           </div>
         `).join("")}
@@ -313,9 +317,13 @@ function weatherHub() {
   hidePanel(panel);
 }
 
+//render hide toggle for panel
+
 function hidePanel(panel) {
   panel.querySelector("#hide-panel-btn").onclick = () => closePanel(panel);
 }
+
+// changing panel content
 
 function changeContent() {
   const panel = document.querySelector("#panel");
@@ -332,13 +340,10 @@ function changeContent() {
   })
 }
 
+// render article of panel
+
 function readArticle(panel, article, panelContent) {
   const { name, date, content, source } = article;
-  const dateFormat = new Date(date).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric"
-  })
   panel.innerHTML = `
   <div id="panel-header" class="flex items-center gap-3">
     <button id="exit-article-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
@@ -346,7 +351,7 @@ function readArticle(panel, article, panelContent) {
   </div>
   <div id="article-header" class="grid gap-3">
     <h3 id="article-title" class="font-bold text-red-400 text-2xl">${name}</h3>
-    <p id="article-date" class="flex gap-3 items-center"><i class="fa fa-calendar"></i>${dateFormat}</p>
+    <p id="article-date" class="flex gap-3 items-center"><i class="fa fa-calendar"></i>${dateFormat.format(new Date(date))}</p>
   </div>
   <article id="article-content" class="text-lg max-h-[30vh] h-auto overflow-scroll">${content ? content : "No content added"}</article>
   ${source ? `<p class="text-lg mt-3 text-white/60">Source: <span class="text-red-400/80">${source}</span></p>` : ""}
@@ -354,14 +359,160 @@ function readArticle(panel, article, panelContent) {
   panel.querySelector("#exit-article-btn").onclick = () => exitToArticle(panel, panelContent);
 }
 
+// render hide toggle for article
+
 function exitToArticle(panel, panelContent) {
   panel.innerHTML = panelContent;
   changeContent();
   hidePanel(panel.parentNode);
 }
 
+// remove node element of panel from body
+
 function closePanel(panel) {
   document.body.removeChild(panel);
   weatherHubBtn.style.pointerEvents = "auto";
   weatherHubBtn.onclick = () => weatherHub();
+}
+
+// ------ Album Section ------
+
+const albumNavBtn = document.querySelector("#album-btn");
+albumNavBtn.onclick = () => openAlbumPanel();
+const panelSections = {
+  home: "",
+  album: "",
+  photo: "",
+}
+function openAlbumPanel() {
+  const { chasers } = albums;
+  albumNavBtn.className += "pointer-events-none text-red-400";
+  const albumPanel = document.createElement("div");
+  albumPanel.id = "album-wrapper";
+  albumPanel.className = "fixed h-screen w-screen grid place-content-center z-10 top-0";
+  albumPanel.innerHTML = `
+    <div id="album-panel" class="p-3 border border-slate-400 w-[95vw] rounded-lg bg-black/80 backdrop-blur-md grid gap-4">
+      <div id="album-panel-header" class="flex gap-3 items-center">
+        <button id="hide-album" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
+        <h3 id="panel-title" class="text-3xl font-bold text-center grow">Chaser's <span class="text-red-400">Album</span></h3>
+      </div>
+      <div id="album-item-wrapper" class="flex flex-wrap gap-3">${chasers.map(c => `
+      <div id="album-chaser" class="basis-[500px] bg-red-400/10 rounded-lg p-3 grid gap-3 items-center grid-cols-[auto_1fr_auto]">
+        <img src="${c.image}" class="size-[80px] rounded-full"/>
+        <div id="album-chaser-info" class="grid gap-1">
+        <h3 id="chaser-name" class="text-red-400 font-bold text-xl">${c.name}</h3>
+        <p id="album-total">${c.album.length} ${c.album.length > 1 ? "Albums" : "Album"}</p>
+        </div>
+        <button id="view-chaser-album-btn" data-name="${c.name}" class="p-2 px-3 rounded-lg text-white bg-red-400">View Album</button>
+      </div>
+      `).join("")}</div>
+    </div>
+  `
+  document.body.appendChild(albumPanel);
+  panelSections.home = albumPanel.querySelector("#album-panel").innerHTML;
+  renderChaserAlbumBtn(albumPanel.querySelector("#album-panel"));
+  renderClosingPanelBtn(albumPanel);
+}
+
+// functionality button to remove panel
+
+function renderClosingPanelBtn(panel) {
+  panel.querySelector("#album-panel #hide-album").onclick = () => {
+    document.body.removeChild(panel);
+    albumNavBtn.className = albumNavBtn.className.replace("pointer-events-none text-red-400", "");
+  }
+}
+
+// functionality button for rendering album selected chaser 
+
+function renderChaserAlbumBtn(albumPanel) {
+  document.querySelectorAll("#view-chaser-album-btn").forEach(btn => btn.onclick = () =>  {
+    viewChaserAlbum(btn.dataset.name)
+     renderExitChaserAlbumBtn(albumPanel);
+  });
+}
+
+// update panel content to Chaser's album
+
+function viewChaserAlbum(name) {
+  const albumPanel = document.querySelector("#album-panel");
+  const albumImagePath = `./image/albums/${name}/`;
+  const foundAlbum = albums.chasers.find(c => c.name === name);
+  albumPanel.innerHTML = `
+    <div id="panel-header" class="flex items-center">
+      <button id="exit-chaser-album-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
+      <h3 id="panel-title" class="text-3xl font-bold grow text-center">${name}'s <span class="text-red-400">Album</span></h3>
+    </div>
+    <div id="chaser-album-wrapper" class="grid grid-cols-2 lg:grid-cols-3 gap-3 max-h-[50vh] overflow-scroll">${foundAlbum.album.map(a => `
+      <div id="chaser-album-item" class="grid gap-3 rounded-lg p-3 bg-red-400/10 items-start">
+        <img src="${albumImagePath}${a.photos[0]?.name}.webp" class="h-[200px] w-full rounded-lg"/>
+        <div id="chaser-item-info-wrapper" class="flex justify-between items-center flex-wrap">
+          <h4 id="chaser-album-name" class="font-bold text-xl">${a.name}</h4>
+          <p id="chaser-album-item-count" class="text-white/60">${a.photos.length} ${a.photos.length > 1 ? "Items" : "Item"}</p>
+        </div>
+        <button id="view-album-category-btn" class="p-2 rounded-lg bg-red-400 text-white text-lg" data-albumname="${a.name}">View</button>
+      </div>
+    `).join("")}</div>
+  `
+  panelSections.album = albumPanel.innerHTML;
+  renderViewChaserAlbumListBtn(
+    name,
+    albumImagePath
+  );
+}
+
+// display button for exit to Home Panel
+
+function renderExitChaserAlbumBtn(album) {
+  album.querySelector("#exit-chaser-album-btn").onclick = () => {
+    album.innerHTML  = panelSections.home;
+    renderChaserAlbumBtn(album);
+    renderClosingPanelBtn(album.parentNode)
+  }
+}
+
+// functionality button to display selected album photos of chaser
+
+function renderViewChaserAlbumListBtn(name, albumImagePath) {
+  const viewAlbumBtns = document.querySelectorAll("#view-album-category-btn")
+    viewAlbumBtns.forEach(btn => btn.onclick = () => {
+     renderChaserPhotos(btn.dataset.albumname, name, albumImagePath)
+  });
+}
+
+// panel content update into lists of selected album
+
+function renderChaserPhotos(selectedAlbum, name, albumImagePath) {
+  const foundPhotos = albums.chasers.find(c => c.name === name).album.find(a => a.name === selectedAlbum).photos;
+  const albumPanel = document.querySelector("#album-panel");
+  albumPanel.innerHTML = `
+    <div id="album-panel-header" class="flex gap-3 items-center">
+      <button id="hide-chaser-album-item-btn" class="p-3 rounded-lg border border-slate-400 text-xl"><i class="fa fa-angle-left"></i></button>
+      <h2 id="panel-title" class="text-2xl font-bold grow text-center">${name}'s ${selectedAlbum} <span class="text-red-400">Photos</span></h2>
+    </div>
+    <div id="chaser-album-photo-wrapper" class="grid gap-4 max-h-[40vh] overflow-scroll xl:grid-cols-2">${foundPhotos.map(p => `
+      <div id="chaser-photo-item" class="grid grid-cols-[auto_1fr_auto] items-center gap-4 bg-red-400/10 p-3 rounded-lg">
+        <img src="${albumImagePath}${p.name}.webp" class="size-[100px] rounded-lg"/>
+        <div id="photo-info" class="grid gap-1">
+          <h3 id="photo-name" class="text-red-400 font-bold text-xl">${p.name}</h3>
+          <p id="photo-date">${dateFormat.format(new Date(p.date))}</p>
+        </div>
+        <button id="view-chaser-photo" class="p-2 px-3 rounded-lg text-red-400 border border-red-400">View Photo</button>
+      </div>
+    `).join("")}</div>
+  `
+  panelSections.photo = albumPanel.innerHTML;
+  renderExitAlbumPhotos(albumPanel, name, albumImagePath)
+}
+
+// render the exit button back to album list of chaser
+
+function renderExitAlbumPhotos(panel, name, albumImagePath) {
+  panel.querySelector("#hide-chaser-album-item-btn").onclick = () => {
+    panel.innerHTML = panelSections.album;
+    renderViewChaserAlbumListBtn(name, albumImagePath)
+    renderExitChaserAlbumBtn(
+      panel
+    )
+  }
 }
