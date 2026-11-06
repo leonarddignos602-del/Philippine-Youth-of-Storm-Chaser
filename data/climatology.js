@@ -9,6 +9,13 @@ export const climatology = {
         "For the Philippines, this means below-normal rainfall and expanding drought conditions. Nine provinces were already in drought as of October 19, projected to increase to 54 by year-end." ],
       date: "10-25-26",
       source: "DOST-PAGASA/World Meteorological Organization"
+    }, {
+      name: "Very Strong El Niño is currently effect in Tropical Pacific",
+      content: [
+        "A very strong El Niño is currently present in Tropical Pacific that persist up to first half of 2027, El Niño may expected to peak before year ends.", " El Niño may increase rainfall deficit which may result dry spell in several areas. ", "Here's the number of provinces that currently affected by El Niño;"],
+      list: ["(5) Meteorological Drought", "(11) Dry Spells", "(10) Dry Conditions"],
+      date: "11-4-26",
+      source: "DOST-PAGASA"
     }
-  ]
+  ],
 }
